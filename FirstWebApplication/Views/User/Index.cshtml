@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+<p><button type="button" class="btn btn-sm btn-success pull-right" onclick="getUser()">Add New</button></p>
+<table id="tableId" class="table table-striped">
+    <thead>
+        <tr>
+            <th class="hidden">Id</th>
+            <th>UserID</th>
+            <th>UserName</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Tel</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+</table>
+
+<div class="modal fade" role="dialog" id="userModal" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="usermodalBody">
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+
+        var dataTable;
+        $(document).ready(function () {
+            dataTable = $("#tableId").DataTable({
+                "ajax": {
+                    "url": "/User/GetAllUser",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "Id", "autoWidth": true },
+                    { "data": "UserId", "autoWidth": true },
+                    { "data": "UserName", "autoWidth": true },
+                    { "data": "Password", "autoWidth": true },
+                    { "data": "Email", "autoWidth": true },
+                    { "data": "Tel", "autoWidth": true },
+                    {
+                        "data": "Id", "width": "50px", "render": function (data) {
+                            return '<button class="btn btn-success" onclick="getUser(' + data + ')">Edit</button>'
+                        }
+                    },
+                                        {
+                        "data": "Id", "width": "50px", "render": function (data) {
+                            return '<button class="btn btn-danger" onclick="Delete(' + data + ')">Delete</button>'
+                        }
+                    }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [0], // Cột đầu tiên (số cột tính từ 0)
+                        "visible": false, // Ẩn cột "Id"
+                    },
+                ],
+                
+
+            });
+        });
+
+        function getUser(Id) {
+            $.get("/User/GetUserPartial", { Id: Id }, function (res) {
+                $("#usermodalBody").html(res);
+                $("#userModal").modal('show');
+            });
+        }
+
+        function createOrUpdate() {
+            var modal = $("#userModal");
+            var form = $('form[name="userForm"]');
+
+            form.validate();
+            if (!form.valid()) {
+                return;
+            } else {
+                var data = form.serialize();
+                $.post("/User/CreateOrUpdateUser", data, function (res) {
+                    if (res) {
+                        modal.modal('hide');
+                        dataTable.ajax.reload();
+                    }
+                });
+            }
+        }
+
+        function Delete(Id) {
+            if (confirm("Are you sure ?") == true) {
+                $.get("/User/Delete", { Id: Id }, function (res) {
+                    if (res) {
+                        dataTable.ajax.reload();
+                    }
+                })
+            }
+
+        }
+    </script>
+}
+

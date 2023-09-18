@@ -1,5 +1,113 @@
-﻿
-@{
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+<p><button type="button" class="btn btn-sm btn-success pull-right" onclick="getUser()">Add New</button></p>
+<div id="grid"></div>
+
+<div class="modal fade" role="dialog" id="userModal" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="usermodalBody">
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "/User/GetAllUser",
+                            dataType: "json",
+                            type: "GET"
+                        }
+                    },
+                    schema: {
+                        data: "data",
+                        total: "total"
+                    },
+                    pageSize: 10,
+                    serverPaging: true
+                },
+                height: 400,
+                sortable: true,
+                pageable: true,
+                columns: [
+                    { field: "Id", title: "Id", hidden: true },
+                    { field: "UserId", title: "Mã nhân viên" },
+                    { field: "UserName", title: "Tên nhân viên" },
+                    { field: "Password", title: "Mật khẩu" },
+                    { field: "Email", title: "Email" },
+                    { field: "Tel", title: "Số điện thoại" },
+                    {
+                        command: [
+                            {
+                                name: "edit", text: "Edit", click: function (e) {
+                                    e.preventDefault();
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                    getUser(dataItem.Id);
+                                }
+                            },
+                            {
+                                name: "destroy", text: "Delete", click: function (e) {
+                                    e.preventDefault();
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                    Delete(dataItem.Id);
+                                }
+                            }
+                        ], title: "Actions", width: "200px"
+                    }
+                ],
+                editable: "popup"
+            });
+        });
+
+        function getUser(Id) {
+            $.get("/User/GetUserPartial", { Id: Id }, function (res) {
+                $("#usermodalBody").html(res);
+                $("#userModal").modal('show');
+            });
+        }
+
+        function createOrUpdate() {
+            var modal = $("#userModal");
+            var form = $('form[name="userForm"]');
+
+            form.validate();
+            if (!form.valid()) {
+                return;
+            } else {
+                var data = form.serialize();
+                $.post("/User/CreateOrUpdateUser", data, function (res) {
+                    if (res) {
+                        modal.modal('hide');
+                        $("#grid").data("kendoGrid").dataSource.read();
+                    }
+
+                });
+            }
+        }
+
+        function Delete(Id) {
+            if (confirm("Are you sure?")) {
+                $.get("/User/Delete", { Id: Id }, function (res) {
+                    if (res) {
+                        $("#grid").data("kendoGrid").dataSource.read();
+                    }
+                });
+            }
+        }
+    </script>
+}
+
+
+
+@*@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -7,6 +115,7 @@
 <h2>Index</h2>
 <p><button type="button" class="btn btn-sm btn-success pull-right" onclick="getUser()">Add New</button></p>
 <table id="tableId" class="table table-striped">
+
     <thead>
         <tr>
             <th class="hidden">Id</th>
@@ -51,7 +160,7 @@
                             return '<button class="btn btn-success" onclick="getUser(' + data + ')">Edit</button>'
                         }
                     },
-                                        {
+                    {
                         "data": "Id", "width": "50px", "render": function (data) {
                             return '<button class="btn btn-danger" onclick="Delete(' + data + ')">Delete</button>'
                         }
@@ -105,5 +214,5 @@
 
         }
     </script>
-}
+}*@
 

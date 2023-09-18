@@ -10,11 +10,11 @@
     <thead>
         <tr>
             <th class="hidden">Id</th>
-            <th>UserID</th>
-            <th>UserName</th>
-            <th>Password</th>
+            <th>Mã nhân viên</th>
+            <th>Tên nhân viên</th>
+            <th>Mật khẩu</th>
             <th>Email</th>
-            <th>Tel</th>
+            <th>Số điện thoại</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -59,8 +59,8 @@
                 ],
                 "columnDefs": [
                     {
-                        "targets": [0], // Cột đầu tiên (số cột tính từ 0)
-                        "visible": false, // Ẩn cột "Id"
+                        "targets": [0], 
+                        "visible": false,
                     },
                 ],
                 
@@ -89,6 +89,7 @@
                         modal.modal('hide');
                         dataTable.ajax.reload();
                     }
+
                 });
             }
         }

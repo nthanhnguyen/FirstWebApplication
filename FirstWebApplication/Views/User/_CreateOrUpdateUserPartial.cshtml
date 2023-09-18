@@ -4,8 +4,7 @@
     @Html.AntiForgeryToken();
     <div class="modal-header">
         <h4 class="modal-title">
-            @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
-            <span>@*@(int.Parse(Model.UserId) > 0 ? "Update User" : "Create New User")*@</span>
+            
             <span>Create New User</span>
 
         </h4>
@@ -15,35 +14,36 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    @Html.LabelFor(x => x.UserId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(x => x.UserId, "Mã nhân viên", htmlAttributes: new { @class = "control-label col-md-2 no-wrap" })
                     <div class="col-md-10">
                         @Html.EditorFor(x => x.UserId, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.ValidationMessageFor(x => x.UserId, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(x => x.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(x => x.UserName, "Tên nhân viên", htmlAttributes: new { @class = "control-label col-md-2 no-wrap" })
                     <div class="col-md-10">
                         @Html.EditorFor(x => x.UserName, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.ValidationMessageFor(x => x.UserName, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(x => x.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(x => x.Password, "Mật khẩu", htmlAttributes: new { @class = "control-label col-md-2 no-wrap" })
                     <div class="col-md-10">
-                        @Html.EditorFor(x => x.Password, new { htmlAttributes = new { @class = "form-control", required = true } })
+                        @Html.PasswordFor(x => x.Password, new { @class = "form-control", required = true })
                         @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
+
                 <div class="form-group">
-                    @Html.LabelFor(x => x.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(x => x.Email, "Email", htmlAttributes: new { @class = "control-label col-md-2  no-wrap" })
                     <div class="col-md-10">
                         @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(x => x.Tel, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(x => x.Tel, "Số điện thoại", htmlAttributes: new { @class = "control-label col-md-2 no-wrap" })
                     <div class="col-md-10">
                         @Html.EditorFor(x => x.Tel, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.ValidationMessageFor(x => x.Tel, "", new { @class = "text-danger" })
@@ -55,9 +55,10 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-sm pull-left> data-dimiss="modal">Cancel</button></button>
-        <button type="button" onclick="createOrUpdate()" class="btn btn-sm btn-success pull-right> data-dimiss="modal">Save</button></button>
+        <button type="button" class="btn btn-sm pull-left" data-dismiss="modal" aria-label="Close">Cancel</button>
+        <button type="button" onclick="createOrUpdate()" class="btn btn-sm btn-success pull-right" data-dismiss="modal">Save</button>
     </div>
+
 </form>
 
 
